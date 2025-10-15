@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View,Text } from "react-native";
 import Layout from "../layout";
 import MoviesSection from "../components/MoviesSection";
 import { moviesData } from "../data/moviesData";
 
 const Home = () => {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<typeof moviesData>([] as any);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setData(moviesData);
+      setLoading(false);
+    }, 1000); // simulate network
+    return () => clearTimeout(timer);
+  }, []);
   return (
     <Layout>
       <View style={styles.container}>
@@ -12,9 +22,9 @@ const Home = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
         >
-          <MoviesSection title="Popular Movies" movies={moviesData} />
-          <MoviesSection title="Top Rated" movies={moviesData} />
-          <MoviesSection title="New Releases" movies={moviesData} />
+          <MoviesSection title="Popular Movies" movies={loading ? [] : data} />
+          <MoviesSection title="Top Rated" movies={loading ? [] : data} />
+          <MoviesSection title="New Releases" movies={loading ? [] : data} />
         </ScrollView>
       </View>
     </Layout>

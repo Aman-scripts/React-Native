@@ -1,81 +1,70 @@
-import React from 'react';
+import React from "react";
 import {
-  View,
   Text,
-  useColorScheme,
   Image,
   StyleSheet,
-  ImageSourcePropType,
-} from 'react-native';
+  TouchableOpacity,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
-type CardProps = {
-  title: string;
-  imageSource: ImageSourcePropType;
-  description?: string;
+type RootStackParamList = {
+  MovieDetails: { id: number };
 };
 
-const Card: React.FC<CardProps> = ({ title, imageSource, description }) => {
-  const dark = useColorScheme() === 'dark';
+interface CardProps {
+  title: string;
+  genre: string;
+  imageSource: any;
+  id: number;
+}
+
+const Card: React.FC<CardProps> = ({ title, genre, imageSource, id }) => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { isAuthenticated } = useContext(AuthContext);
+  const handlePress = () => {
+    if (!isAuthenticated) {
+      // open login modal on root stack
+      (navigation as any).getParent()?.navigate('LoginModal');
+      return;
+    }
+    navigation.navigate("MovieDetails", { id });
+  };
 
   return (
-    <View style={[styles.card, { backgroundColor: dark ? '#1e1e1e' : '#fff' }]}>
-      <Image source={imageSource} style={styles.image} resizeMode="cover" />
-      <View style={styles.overlay}>
-        <Text style={[styles.title, { color: '#fff' }]} numberOfLines={1}>
-          {title}
-        </Text>
-        {description && (
-          <Text
-            style={[styles.description, { color: '#fff' }]}
-            numberOfLines={2}
-          >
-            {description}
-          </Text>
-        )}
-      </View>
-    </View>
+    <TouchableOpacity style={styles.card} onPress={handlePress}>
+      <Image source={imageSource} style={styles.image} />
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.desc} numberOfLines={1}>
+        {genre}
+      </Text>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  category: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 8,
-    textTransform: 'uppercase',
-  },
   card: {
-    borderRadius: 12,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 5,
-    width: 180,
-    height: 270,
+    width: 150,
+    borderRadius: 10,
+    backgroundColor: "#fff",
+    elevation: 3,
+    padding: 8,
   },
   image: {
-    width: '100%',
-    height: '100%',
-  },
-  overlay: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    paddingVertical: 8,
-    paddingHorizontal: 6,
+    width: "100%",
+    height: 200,
+    borderRadius: 8,
   },
   title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  description: {
     fontSize: 14,
-    textAlign: 'center',
-    marginTop: 4,
+    fontWeight: "700",
+    marginTop: 8,
+  },
+  desc: {
+    fontSize: 12,
+    color: "#666",
   },
 });
 
