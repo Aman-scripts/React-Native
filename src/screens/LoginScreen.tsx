@@ -12,7 +12,6 @@ const LoginScreen = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      // Close modal and go to Home tab at root
       navigation.goBack();
       navigation.navigate('MainTabs', { screen: 'HomeTab' });
     }

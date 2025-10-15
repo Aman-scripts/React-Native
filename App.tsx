@@ -1,4 +1,5 @@
 import React from "react";
+import { StatusBar, useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -107,9 +108,11 @@ function TabsNavigator() {
 }
 
 export default function App() {
+  const dark = useColorScheme() === 'dark';
   return (
     <AuthProvider>
       <NavigationContainer>
+        <StatusBar barStyle={dark ? 'light-content' : 'dark-content'} backgroundColor={dark ? '#0d0d0d' : '#f2f2f2'} />
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="MainTabs" component={TabsNavigator} />
           <Stack.Screen

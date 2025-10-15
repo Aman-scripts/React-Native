@@ -27,7 +27,7 @@ const Header: React.FC = () => {
           style={styles.logo}
           resizeMode="contain"
         />
-        <Text style={[styles.headerText, { color: dark ? '#fff' : '#' }]}>
+        <Text style={[styles.headerText, { color: dark ? '#fff' : '#1e90ff' }]}>
           Movie App
         </Text>
         {!isAuthenticated ? (
@@ -54,7 +54,7 @@ const Header: React.FC = () => {
           >
             <Ionicons
               name="log-out-outline"
-              size={30}
+              size={28}
               color={dark ? '#fff' : '#1e90ff'}
             />
           </TouchableOpacity>
